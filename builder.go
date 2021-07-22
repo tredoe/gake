@@ -7,7 +7,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -17,7 +16,7 @@ import (
 
 // BuildAndRun uses the tool "go build" to compile the task files to file "cmdPath".
 func BuildAndRun(pkg *taskPackage, cmdPath string) error {
-	workDir, err := ioutil.TempDir("", "gake-")
+	workDir, err := os.CreateTemp("", "gake-")
 	if err != nil {
 		return err
 	}
@@ -25,11 +24,11 @@ func BuildAndRun(pkg *taskPackage, cmdPath string) error {
 
 	// Copy all files to the temporary directory.
 	for _, f := range pkg.Files {
-		src, err := ioutil.ReadFile(f.Name)
+		src, err := os.ReadFile(f.Name)
 		if err != nil {
 			return err
 		}
-		err = ioutil.WriteFile(workDir+string(os.PathSeparator)+filepath.Base(f.Name), src, 0644)
+		err = os.WriteFile(workDir+string(os.PathSeparator)+filepath.Base(f.Name), src, 0644)
 		if err != nil {
 			return err
 		}
