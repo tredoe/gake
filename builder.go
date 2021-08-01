@@ -16,10 +16,12 @@ import (
 
 // BuildAndRun uses the tool "go build" to compile the task files to file "cmdPath".
 func BuildAndRun(pkg *taskPackage, cmdPath string) error {
-	workDir, err := os.CreateTemp("", "gake-")
+	file, err := os.CreateTemp("", "gake-")
 	if err != nil {
 		return err
 	}
+	workDir := file.Name()
+
 	defer os.RemoveAll(workDir)
 
 	// Copy all files to the temporary directory.
